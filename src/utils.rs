@@ -36,18 +36,31 @@ mod utils_tests {
     }
 
     mod u32_to_i32_tests {
+        use std::u32;
+
         use super::*;
         #[test]
         fn negatave_numbers() {
             let a = 32u32;
             let a = u32_to_i32(a);
-            assert_eq!(-2_147_483_616i32, a)
+            assert_eq!(i32::MIN + 32, a)
         }
         #[test]
         fn positive_numbers() {
             let a = 2_436_345_356u32;
             let a = u32_to_i32(a);
             assert_eq!(288_861_708i32, a);
+        }
+        #[test]
+        fn zero() {
+            let a = 0u32;
+            assert_eq!(i32::MIN, u32_to_i32(a))
+        }
+        #[test]
+        fn max_numbers() {
+            let a = u32_to_i32(u32::MAX);
+
+            assert_eq!(i32::MAX, a)
         }
     }
 
