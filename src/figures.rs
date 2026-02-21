@@ -25,7 +25,8 @@ impl Drawable for Rectangle {
                 if x == 0 || x == width - 1 || y == 0 || y == height - 1 {
                     char = '*';
                 }
-                if let Err(_) = grid.draw(&Point(u32_to_i32(x), u32_to_i32(y)), char) {
+                if let Err(num) = grid.draw(&Point(u32_to_i32(x), u32_to_i32(y)), char) {
+                    eprint!("{num}");
                     unreachable!()
                 }
             }

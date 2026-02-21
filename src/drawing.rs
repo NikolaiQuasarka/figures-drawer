@@ -1,4 +1,4 @@
-use crate::utils::i32_to_u32;
+use crate::utils::{i32_to_u32, i32_to_usize};
 
 pub struct Size(pub u32, pub u32);
 
@@ -20,21 +20,30 @@ impl Grid {
         Grid { field, center }
     }
 
-    //крч, раст перводит начинает отсчет от useze::MAX для отрицательных чисел
-    // когда точка находится в отрицательных координатах, число выходит далеко за границы грида и возвращается ошибка
-    pub fn draw(&mut self, point: &Point, char: char) -> Result<(), ()> {
-        let point_y_as_usize = i32_to_u32(point.1) as usize;
+    pub fn draw(&mut self, point: &Point, char: char) -> Result<(), i32> {
+        let point_y_as_usize = i32_to_usize(point.1);
         let Some(row) = self.field.get_mut(point_y_as_usize) else {
-            return Err(());
+            return Err(0);
         };
 
-        let Some(cell) = row.get_mut(point.0 as usize) else {
-            return Err(());
+        let Some(cell) = row.get_mut(i32_to_usize(point.0)) else {
+            return Err(1);
         };
 
         *cell = char;
 
         Ok(())
+    }
+
+    ///Get cell relatively by center of matrix
+    pub fn get_cell(&self, point: Point) -> Option<char> {
+        if !self.is_char_displayed(point) {
+            return None;
+        }
+        //блять Коля эта какаета хуйня, что ты написал. Крч, у тебя есть виртуальное поле
+        // а есть настощяшее, корое матрица. Тебе надо функция, котороая преобразует велечины из вирутальных
+        // единиц в единицы для матрицы. И вообще апи говно
+        // self.field
     }
 
     pub fn get_size(&self) -> Size {
@@ -68,7 +77,16 @@ impl Grid {
     }
 
     fn is_char_displayed(&self, point: Point) -> bool {
-        unimplemented!()
+        let (lt_corner, rb_corner) = self.get_coordinates();
+
+        if point.0 >= lt_corner.0
+            && point.0 <= rb_corner.0
+            && point.1 <= lt_corner.1
+            && point.1 >= rb_corner.1
+        {
+            return true;
+        }
+        false
     }
 
     fn real_position_from_relative(relative_position: Point, real_point: Point) -> Point {
