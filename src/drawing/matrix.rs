@@ -82,7 +82,7 @@ impl Matrix<char> {
 }
 
 #[cfg(test)]
-mod matrix_tests {
+mod tests {
     use super::*;
 
     mod relative_to_real {

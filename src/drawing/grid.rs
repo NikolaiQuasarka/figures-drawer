@@ -49,7 +49,7 @@ impl ToString for Grid {
 }
 
 #[cfg(test)]
-mod grid_tetts {
+mod tests {
     use super::*;
 
     mod from {
