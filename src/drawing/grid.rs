@@ -107,4 +107,20 @@ mod tests {
             assert_eq!(string, grid.to_string())
         }
     }
+
+    mod draw {
+        use super::*;
+        use crate::figures::{Drawable, rectangle::Rectangle};
+
+        #[test]
+        fn rectangle() {
+            let rectangle = Rectangle::from(4, 4).unwrap();
+
+            let mut grid = Grid::from(Size(4, 4)).unwrap();
+
+            grid.draw(rectangle.create_drawing().unwrap(), Point::default());
+
+            assert_eq!(rectangle.create_drawing().unwrap(), grid.field)
+        }
+    }
 }
