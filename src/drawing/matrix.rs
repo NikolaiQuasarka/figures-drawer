@@ -1,4 +1,4 @@
-use crate::drawing::basic::Size;
+use crate::drawing::basic::{Point, Size};
 
 #[derive(Debug, PartialEq)]
 pub struct Matrix<T> {
@@ -6,8 +6,16 @@ pub struct Matrix<T> {
 }
 
 impl Matrix<char> {
+    pub fn get_center(&self) -> (u32, u32) {
+        let size = self.get_size();
+        let center_width = size.0 / 2;
+        let center_height = size.1 / 2;
+
+        (center_width, center_height)
+    }
+
     pub fn from(size: Size) -> Result<Self, ()> {
-        if size.0 < 1 || size.1 < 1 {
+        if size.0 < 1 || size.1 < 1 || size.0 > 10000 || size.1 > 10000 {
             return Err(());
         }
         Ok(Self {
@@ -22,14 +30,40 @@ impl Matrix<char> {
         Size(self.data[0].len() as u32, self.data.len() as u32)
     }
 
-    fn get_center(&self) -> (u32, u32) {
-        let size = self.get_size();
-        let center_width = size.0 / 2 + 1;
-        let center_height = size.1 / 2 + 1;
+    pub fn relative_to_absolute(&self, position: Point) -> Option<(u32, u32)> {
+        let center = self.get_center();
+        dbg!(center);
+        dbg!(&position);
 
-        (center_width, center_height)
+        let real_position = (center.0 as i32 + position.0, center.1 as i32 + position.1);
+        dbg!(real_position);
+
+        let size = self.get_size();
+
+        if real_position.0 < 0
+            || real_position.0 >= size.0 as i32
+            || real_position.1 < 0
+            || real_position.1 >= size.1 as i32
+        {
+            return None;
+        }
+
+        let real_position = (real_position.0 as u32, real_position.1 as u32);
+
+        self.cell(real_position).is_some().then_some(real_position)
     }
 
+    pub fn cell<'a>(&'a self, (x, y): (u32, u32)) -> Option<&'a char> {
+        let Some(row) = self.data.get(y as usize) else {
+            return None;
+        };
+
+        let Some(cell) = row.get(x as usize) else {
+            return None;
+        };
+
+        Some(cell)
+    }
     pub fn cell_mut<'a>(&'a mut self, (x, y): (u32, u32)) -> Option<&'a mut char> {
         let Some(row) = self.data.get_mut(y as usize) else {
             return None;
@@ -40,13 +74,51 @@ impl Matrix<char> {
         };
 
         Some(cell)
-        // unimplemented!()
+    }
+
+    pub fn get_rows(&self) -> &Box<[Box<[char]>]> {
+        &self.data
     }
 }
 
 #[cfg(test)]
 mod matrix_tests {
     use super::*;
+
+    mod relative_to_real {
+        use super::*;
+
+        #[test]
+        fn test1() {
+            let matrix = Matrix::from(Size(100, 50)).expect("Ошибка создания");
+
+            assert_eq!(
+                (51, 26),
+                matrix
+                    .relative_to_absolute(Point(1, 1))
+                    .expect("Ошибка извлечения позиции")
+            )
+        }
+
+        #[test]
+        fn test2() {
+            let matrix = Matrix::from(Size(100, 50)).expect("Ошибка создания");
+
+            assert_eq!(
+                (40, 3),
+                matrix
+                    .relative_to_absolute(Point(-10, -22))
+                    .expect("Ошибка извлечения позиции")
+            )
+        }
+
+        #[test]
+        fn test3() {
+            let matrix = Matrix::from(Size(100, 50)).expect("Ошибка создания");
+
+            assert_eq!(None, matrix.relative_to_absolute(Point(-100, -22)))
+        }
+    }
 
     mod from {
         use super::*;
@@ -67,33 +139,39 @@ mod matrix_tests {
     }
     mod get_center {
         use super::*;
-
         #[test]
         fn center1() {
             let matrix = Matrix::from(Size(5, 5)).unwrap();
 
-            assert_eq!((3, 3), matrix.get_center())
+            assert_eq!((2, 2), matrix.get_center())
         }
 
         #[test]
         fn center2() {
             let matrix = Matrix::from(Size(6, 6)).unwrap();
 
-            assert_eq!((4, 4), matrix.get_center())
+            assert_eq!((3, 3), matrix.get_center())
         }
 
         #[test]
         fn center3() {
             let matrix = Matrix::from(Size(6, 5)).unwrap();
 
-            assert_eq!((4, 3), matrix.get_center())
+            assert_eq!((3, 2), matrix.get_center())
         }
 
         #[test]
         fn center4() {
             let matrix = Matrix::from(Size(6, 8)).unwrap();
 
-            assert_eq!((4, 5), matrix.get_center())
+            assert_eq!((3, 4), matrix.get_center())
+        }
+
+        #[test]
+        fn center5() {
+            let matrix = Matrix::from(Size(100, 50)).unwrap();
+
+            assert_eq!((50, 25), matrix.get_center())
         }
     }
     mod cell {

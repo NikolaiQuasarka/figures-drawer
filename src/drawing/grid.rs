@@ -6,18 +6,105 @@ use crate::drawing::{
 #[derive(Debug)]
 pub struct Grid {
     field: Matrix<char>,
-    center: Point,
+    // center: Point,
 }
 
 impl Grid {
-    pub fn new(size: Size, center: Point) -> Result<Self, ()> {
+    pub fn from(size: Size) -> Result<Self, ()> {
         let Ok(matrix) = Matrix::from(size) else {
             return Err(());
         };
 
-        Ok(Grid {
-            field: matrix,
-            center,
-        })
+        Ok(Grid { field: matrix })
+    }
+
+    pub fn draw(&mut self, draw: Matrix<char>, offset: Point) {
+        for (y, row) in draw.get_rows().into_iter().enumerate() {
+            for (x, draw_cell) in row.into_iter().enumerate() {
+                let Some(grid_cell) = self.field.cell_mut((
+                    (x as i64).saturating_add(offset.0 as i64) as u32,
+                    (y as i64).saturating_add(offset.1 as i64) as u32,
+                )) else {
+                    continue;
+                };
+                *grid_cell = *draw_cell;
+            }
+        }
+    }
+}
+
+impl ToString for Grid {
+    fn to_string(&self) -> String {
+        self.field
+            .get_rows()
+            .iter()
+            .map(|row| {
+                let mut row = row.iter().collect::<String>();
+                row.push('\n');
+                row
+            })
+            .collect::<Vec<_>>()
+            .join("")
+    }
+}
+
+#[cfg(test)]
+mod grid_tetts {
+    use super::*;
+
+    mod from {
+        use super::*;
+
+        #[test]
+        fn positive_size_succeeds() {
+            let grid = Grid::from(Size(5, 5));
+            assert!(grid.is_ok());
+        }
+
+        #[test]
+        fn zero_width_fails() {
+            let size = Size(0, 5);
+            let grid = Grid::from(size);
+            assert!(grid.is_err());
+        }
+
+        #[test]
+        fn zero_height_fails() {
+            let size = Size(5, 0);
+            let grid = Grid::from(size);
+            assert!(grid.is_err());
+        }
+
+        #[test]
+        fn zero_both_fails() {
+            let size = Size(0, 0);
+            let grid = Grid::from(size);
+            assert!(grid.is_err());
+        }
+
+        #[test]
+        fn max_value_succeeds() {
+            let grid = Grid::from(Size(10001, 10000));
+            assert!(grid.is_err());
+        }
+    }
+
+    mod to_string {
+        use super::*;
+
+        #[test]
+        fn empty_grid() {
+            let grid = Grid::from(Size(5, 5)).unwrap();
+
+            let string = (0..5)
+                .map(|_| {
+                    let mut string_vec = vec![' '; 5];
+                    string_vec.push('\n');
+                    string_vec.into_iter().collect::<String>()
+                })
+                .collect::<String>();
+
+            assert_eq!(string, grid.to_string())
+        }
     }
 }
