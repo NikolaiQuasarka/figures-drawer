@@ -1,3 +1,3 @@
-mod drawing;
-mod figures;
+pub mod drawing;
+pub mod figures;
 mod utils;
