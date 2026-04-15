@@ -20,6 +20,15 @@ fn app() {
 
         break grid;
     };
+
+    println!("A grid is created!");
+
+    println!(
+        "Now choose what you want to draw:
+        \n1. Circle
+        \n2. Rectangle
+        \n3. Triangle"
+    )
 }
 
 fn get_grid_size() -> basic::Size {
