@@ -2,13 +2,13 @@ mod rectangle;
 
 use crate::figures::Drawable;
 
-pub enum FigureInput {
+pub enum DrawInput {
     Circle,
     Rectangle,
     Triangle,
 }
 
-impl FigureInput {
+impl DrawInput {
     fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
         let draw: Box<dyn Drawable> = Box::new(match str {
             "Circle" => todo!(),
