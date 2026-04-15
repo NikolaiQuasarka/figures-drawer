@@ -1,26 +1,18 @@
 use std::io;
 
-use rectangle::{
-    drawing::{self, basic, grid},
-    figures::{self, Drawable},
-    input,
-};
+use crate::drawing::{basic, grid};
 
-fn main() {
-    app();
-}
+pub fn get_grid() -> grid::Grid {
+    loop {
+        let grid_size = get_grid_size();
 
-fn app() {
-    let grid = input::get_grid::get_grid();
+        let Ok(grid) = grid::Grid::from(grid_size) else {
+            eprint!("Try again");
+            continue;
+        };
 
-    println!("A grid is created!");
-
-    println!(
-        "Now choose what you want to draw:
-        \n1. Circle
-        \n2. Rectangle
-        \n3. Triangle"
-    )
+        break grid;
+    }
 }
 
 fn get_grid_size() -> basic::Size {
