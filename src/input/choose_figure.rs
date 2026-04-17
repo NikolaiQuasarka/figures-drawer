@@ -46,6 +46,8 @@ pub fn get_draw() -> Box<dyn Drawable> {
             continue;
         }
 
+        let draw = draw.trim();
+
         let draw = match DrawInput::from(&draw) {
             Ok(draw) => draw,
             Err(_) => {

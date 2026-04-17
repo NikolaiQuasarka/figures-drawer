@@ -19,6 +19,8 @@ fn get_size(prompt: &str) -> u32 {
             continue;
         }
 
+        let size = size.trim();
+
         let size = match size.parse::<u32>() {
             Ok(size) => {
                 if size < 1 {
