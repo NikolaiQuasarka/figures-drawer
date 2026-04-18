@@ -17,10 +17,6 @@ fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
 
 const LIST: [&str; 3] = ["Circle", "Rectangle", "Triangle"];
 
-// pub fn list() -> &'static [&'static str; 3] {
-//     &["Circle", "Rectangle", "Triangle"]
-// }
-
 fn get_drawing() -> Box<dyn Drawable> {
     println!(
         "Введите название рисунка:{}",
