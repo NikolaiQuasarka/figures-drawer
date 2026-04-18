@@ -2,7 +2,7 @@ mod rectangle;
 
 use std::io;
 
-use crate::figures::Drawable;
+use crate::{figures::Drawable, input};
 
 pub enum DrawInput {
     Circle,
@@ -59,5 +59,34 @@ pub fn get_drawing() -> Box<dyn Drawable> {
         break drawing;
     };
 
-    draw
+    drawing
+}
+
+pub fn get_drawings() -> Vec<Box<dyn Drawable>> {
+    let mut drawings = vec![];
+
+    //Нужно получить минимум 1 рисунок
+    let first_draw = get_drawing();
+
+    drawings.push(first_draw);
+
+    loop {
+        let answer: String = input::input(
+            "Хотите нарисовать больше рисунков?\nВарианты ответа:\nД[а]\nН[ет]",
+            "Таког ответа нет",
+            |input| input == "Д" || input == "Н",
+        );
+
+        match answer.as_str() {
+            "Д" => {
+                let new_drawing = get_drawing();
+
+                drawings.push(new_drawing);
+            }
+            "Н" => break,
+            _ => unreachable!(),
+        }
+    }
+
+    drawings
 }
