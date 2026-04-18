@@ -23,35 +23,15 @@ fn get_grid_size() -> basic::Size {
 
     let width: u32 = input::input(
         "Введите ширину:",
-        "Значение должно быть выше 1",
+        "Значение должно быть выше 0. Только целые числа",
         |&width| width > 0,
     );
 
-    let height: u32 = loop {
-        println!("Enter height");
-
-        let mut height: String = String::new();
-
-        if let Err(e) = io::stdin().read_line(&mut height) {
-            println!("Input error: {}", e.to_string());
-            continue;
-        }
-
-        match height.trim().parse::<u32>() {
-            Ok(height) => {
-                if height < 1 {
-                    eprint!("Value below 1. Height shoud be 1 and higher");
-                    continue;
-                } else {
-                    break height;
-                }
-            }
-            Err(_) => {
-                eprintln!("Wrong input. Try again");
-                continue;
-            }
-        };
-    };
+    let height: u32 = input::input(
+        "Введите высоту:",
+        "Значение должно быть выше 0. Только целые числа",
+        |&height| height > 0,
+    );
 
     basic::Size(width, height)
 }
