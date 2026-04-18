@@ -27,7 +27,7 @@ impl DrawInput {
     }
 }
 
-pub fn get_drawing() -> Box<dyn Drawable> {
+fn get_drawing() -> Box<dyn Drawable> {
     println!(
         "Введите название рисунка:{}",
         DrawInput::list()
