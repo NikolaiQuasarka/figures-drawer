@@ -12,14 +12,14 @@ pub enum DrawInput {
 
 impl DrawInput {
     fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
-        let draw: Box<dyn Drawable> = Box::new(match str {
+        let drawing: Box<dyn Drawable> = Box::new(match str {
             "Circle" => todo!(),
             "Rectangle" => rectangle::get_rectangle(),
             "Triangle" => todo!(),
             _ => return Err(()),
         });
 
-        Ok(draw)
+        Ok(drawing)
     }
 
     pub fn list() -> &'static [&'static str; 3] {
@@ -27,7 +27,7 @@ impl DrawInput {
     }
 }
 
-pub fn get_draw() -> Box<dyn Drawable> {
+pub fn get_drawing() -> Box<dyn Drawable> {
     println!(
         "Введите название рисунка:{}",
         DrawInput::list()
@@ -37,7 +37,7 @@ pub fn get_draw() -> Box<dyn Drawable> {
             .collect::<String>()
     );
 
-    let draw = loop {
+    let drawing = loop {
         let mut draw = String::new();
 
         if let Err(_) = io::stdin().read_line(&mut draw) {
@@ -46,17 +46,17 @@ pub fn get_draw() -> Box<dyn Drawable> {
             continue;
         }
 
-        let draw = draw.trim();
+        let drawing = draw.trim();
 
-        let draw = match DrawInput::from(&draw) {
-            Ok(draw) => draw,
+        let drawing = match DrawInput::from(&drawing) {
+            Ok(drawing) => drawing,
             Err(_) => {
                 eprintln!("Такого рисунка не существует");
                 continue;
             }
         };
 
-        break draw;
+        break drawing;
     };
 
     draw

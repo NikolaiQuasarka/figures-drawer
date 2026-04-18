@@ -18,8 +18,8 @@ impl Grid {
         Ok(Grid { field: matrix })
     }
 
-    pub fn draw(&mut self, draw: Matrix<char>, offset: Point) {
-        for (y, row) in draw.get_rows().into_iter().enumerate() {
+    pub fn draw(&mut self, drawing: Matrix<char>, offset: Point) {
+        for (y, row) in drawing.get_rows().into_iter().enumerate() {
             for (x, draw_cell) in row.into_iter().enumerate() {
                 let Some(grid_cell) = self.field.cell_mut((
                     (x as i64).saturating_add(offset.0 as i64) as u32,

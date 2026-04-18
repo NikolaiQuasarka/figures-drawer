@@ -9,11 +9,13 @@ fn app() {
 
     println!("Сетка создана!");
 
-    let draw = input::choose_figure::get_draw().create_drawing().unwrap();
+    let drawing = input::choose_figure::get_drawing()
+        .create_drawing()
+        .unwrap();
 
     println!("Рисунок создан");
 
-    grid.draw(draw, basic::Point::default());
+    grid.draw(drawing, basic::Point::default());
 
     println!("{}", grid.to_string())
 }
