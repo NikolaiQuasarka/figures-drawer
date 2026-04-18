@@ -4,34 +4,27 @@ use std::io;
 
 use crate::{figures::Drawable, input};
 
-pub enum DrawInput {
-    Circle,
-    Rectangle,
-    Triangle,
+fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
+    let drawing: Box<dyn Drawable> = Box::new(match str {
+        "Circle" => todo!(),
+        "Rectangle" => rectangle::get_rectangle(),
+        "Triangle" => todo!(),
+        _ => return Err(()),
+    });
+
+    Ok(drawing)
 }
 
-impl DrawInput {
-    fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
-        let drawing: Box<dyn Drawable> = Box::new(match str {
-            "Circle" => todo!(),
-            "Rectangle" => rectangle::get_rectangle(),
-            "Triangle" => todo!(),
-            _ => return Err(()),
-        });
+const LIST: [&str; 3] = ["Circle", "Rectangle", "Triangle"];
 
-        Ok(drawing)
-    }
-
-    pub fn list() -> &'static [&'static str; 3] {
-        &["Circle", "Rectangle", "Triangle"]
-    }
-}
+// pub fn list() -> &'static [&'static str; 3] {
+//     &["Circle", "Rectangle", "Triangle"]
+// }
 
 fn get_drawing() -> Box<dyn Drawable> {
     println!(
         "Введите название рисунка:{}",
-        DrawInput::list()
-            .iter()
+        LIST.iter()
             .enumerate()
             .map(|(i, draw)| { format!("\n{i}. {draw}") })
             .collect::<String>()
@@ -48,7 +41,7 @@ fn get_drawing() -> Box<dyn Drawable> {
 
         let drawing = draw.trim();
 
-        let drawing = match DrawInput::from(&drawing) {
+        let drawing = match from(&drawing) {
             Ok(drawing) => drawing,
             Err(_) => {
                 eprintln!("Такого рисунка не существует");
