@@ -22,29 +22,37 @@ impl std::fmt::Display for InputError {
     }
 }
 
-pub fn input<T, F>(prompt: &str, err_message: &str, check: F) -> Result<T, InputError>
+pub fn input<T, F>(prompt: &str, check_fail_message: &str, check: F) -> T
 where
     T: FromStr,
     T::Err: Into<Box<dyn Error>>,
     F: Fn(&T) -> bool,
 {
-    println!("{}", prompt);
+    let target_value = loop {
+        println!("{}", prompt);
 
-    let mut user_input = String::new();
+        let mut user_input = String::new();
 
-    io::stdin().read_line(&mut user_input).map_err(|e| {
-        eprintln!("{}: {}", err_message, e);
-        InputError::BuffError
-    })?;
+        if let Err(_) = io::stdin().read_line(&mut user_input) {
+            eprintln!("Ошибка чтения ввода");
+            continue;
+        }
+        let target_value = match user_input.trim().parse::<T>() {
+            Ok(ok) => ok,
+            Err(_) => {
+                eprintln!("Ошибка парсинга");
+                continue;
+            }
+        };
 
-    let target_value = user_input.trim().parse::<T>().map_err(|_| {
-        eprintln!("Ошибка парсинга");
-        InputError::ParseError
-    })?;
+        if !check(&target_value) {
+            eprintln!("{}", check_fail_message);
 
-    if !check(&target_value) {
-        return Err(InputError::CheckError);
-    }
+            continue;
+        }
 
-    Ok(target_value)
+        break target_value;
+    };
+
+    target_value
 }

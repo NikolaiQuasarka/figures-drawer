@@ -1,6 +1,9 @@
 use std::io;
 
-use crate::drawing::{basic, grid};
+use crate::{
+    drawing::{basic, grid},
+    input,
+};
 
 pub fn get_grid() -> grid::Grid {
     loop {
@@ -18,31 +21,11 @@ pub fn get_grid() -> grid::Grid {
 fn get_grid_size() -> basic::Size {
     println!("Enter grid size:");
 
-    let width: u32 = loop {
-        println!("Enter width");
-
-        let mut width: String = String::new();
-
-        if let Err(e) = io::stdin().read_line(&mut width) {
-            println!("Input error: {}", e.to_string());
-            continue;
-        }
-
-        match width.trim().parse::<u32>() {
-            Ok(width) => {
-                if width < 1 {
-                    eprintln!("Value below 1. Width should be 1 and higher");
-                    continue;
-                } else {
-                    break width;
-                }
-            }
-            Err(_) => {
-                eprintln!("Wrong input. Try again");
-                continue;
-            }
-        };
-    };
+    let width: u32 = input::input(
+        "Введите ширину:",
+        "Значение должно быть выше 1",
+        |&width| width > 0,
+    );
 
     let height: u32 = loop {
         println!("Enter height");
