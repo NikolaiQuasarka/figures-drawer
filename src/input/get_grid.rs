@@ -1,5 +1,3 @@
-use std::io;
-
 use crate::{
     drawing::{basic, grid},
     input,
