@@ -32,11 +32,8 @@ impl Matrix<char> {
 
     pub fn relative_to_absolute(&self, position: Point) -> Option<(u32, u32)> {
         let center = self.get_center();
-        dbg!(center);
-        dbg!(&position);
 
         let real_position = (center.0 as i32 + position.0, center.1 as i32 + position.1);
-        dbg!(real_position);
 
         let size = self.get_size();
 
