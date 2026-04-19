@@ -9,7 +9,10 @@ impl Matrix<char> {
     pub fn get_center(&self) -> (u32, u32) {
         let size = self.get_size();
         let center_width = size.0 / 2;
-        let center_height = size.1 / 2;
+        let center_height = match size.1 % 2 {
+            0 => size.1 / 2 - 1,
+            _ => size.1 / 2,
+        };
 
         (center_width, center_height)
     }
@@ -90,7 +93,7 @@ mod tests {
             let matrix = Matrix::from(Size(100, 50)).expect("Ошибка создания");
 
             assert_eq!(
-                (51, 26),
+                (51, 25),
                 matrix
                     .relative_to_absolute(Point(1, 1))
                     .expect("Ошибка извлечения позиции")
@@ -102,7 +105,7 @@ mod tests {
             let matrix = Matrix::from(Size(100, 50)).expect("Ошибка создания");
 
             assert_eq!(
-                (40, 3),
+                (40, 2),
                 matrix
                     .relative_to_absolute(Point(-10, -22))
                     .expect("Ошибка извлечения позиции")
@@ -147,7 +150,7 @@ mod tests {
         fn center2() {
             let matrix = Matrix::from(Size(6, 6)).unwrap();
 
-            assert_eq!((3, 3), matrix.get_center())
+            assert_eq!((3, 2), matrix.get_center())
         }
 
         #[test]
@@ -161,14 +164,14 @@ mod tests {
         fn center4() {
             let matrix = Matrix::from(Size(6, 8)).unwrap();
 
-            assert_eq!((3, 4), matrix.get_center())
+            assert_eq!((3, 3), matrix.get_center())
         }
 
         #[test]
         fn center5() {
             let matrix = Matrix::from(Size(100, 50)).unwrap();
 
-            assert_eq!((50, 25), matrix.get_center())
+            assert_eq!((50, 24), matrix.get_center())
         }
     }
     mod cell {
