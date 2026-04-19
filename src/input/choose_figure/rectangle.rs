@@ -1,8 +1,4 @@
 use crate::{figures::rectangle, input};
-<<<<<<< HEAD
-use std::io;
-=======
->>>>>>> d6daa2a (Заменил старые инпуты на новый метод)
 
 pub fn get_rectangle() -> rectangle::Rectangle {
     let width = input::input(
