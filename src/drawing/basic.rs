@@ -9,3 +9,19 @@ impl Point {
         Point(0, 0)
     }
 }
+
+impl std::str::FromStr for Point {
+    type Err = Box<dyn std::error::Error>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let (x, y) = s
+            .trim()
+            .split_once(',')
+            .ok_or_else(|| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
+
+        let x = x.parse()?;
+        let y = y.parse()?;
+
+        Ok(Self(x, y))
+    }
+}
