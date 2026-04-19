@@ -1,5 +1,6 @@
 pub mod choose_figure;
 pub mod get_grid;
+pub mod get_offset;
 
 use std::{error::Error, io, str::FromStr};
 

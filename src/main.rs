@@ -1,4 +1,4 @@
-use rectangle::{drawing::basic, input};
+use rectangle::input;
 
 fn main() {
     app();
@@ -16,7 +16,9 @@ fn app() {
     drawings.iter().for_each(|drawing| {
         let drawing = drawing.create_drawing().unwrap();
 
-        grid.draw(drawing, basic::Point::default());
+        let offset = input::get_offset::get_offset();
+
+        grid.draw(drawing, offset);
     });
 
     println!("{}", grid.to_string())
