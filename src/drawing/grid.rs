@@ -22,8 +22,10 @@ impl Grid {
         for (y, row) in drawing.get_rows().into_iter().enumerate() {
             for (x, draw_cell) in row.into_iter().enumerate() {
                 let Some(grid_cell) = self.field.cell_mut((
+                    //Используем sub, так как нумерация строк и столбцов идет слева/сверху вправо/вниз
+                    // Это полностью противоположно тому, что нужно сделать
                     (x as i64).saturating_add(offset.0 as i64) as u32,
-                    (y as i64).saturating_add(offset.1 as i64) as u32,
+                    (y as i64).saturating_sub(offset.1 as i64) as u32,
                 )) else {
                     continue;
                 };
