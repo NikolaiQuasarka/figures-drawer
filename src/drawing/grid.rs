@@ -41,9 +41,8 @@ impl ToString for Grid {
             .get_rows()
             .iter()
             .map(|row| {
-                let mut row = row.iter().collect::<String>();
-                row.push('\n');
-                row
+                let row = row.iter().collect::<String>();
+                format!("\n{row}")
             })
             .collect::<Vec<_>>()
             .join("")
