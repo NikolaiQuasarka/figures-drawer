@@ -32,8 +32,8 @@ impl std::str::FromStr for Point {
     type Err = Box<dyn std::error::Error>;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let parts = s.trim();
-        if parts.is_empty() {
+        let splits = s.trim();
+        if splits.is_empty() {
             return Ok(Self::default());
         }
 

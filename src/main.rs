@@ -25,10 +25,8 @@ fn app() {
         basic::Point::default(),
     );
 
-    drawings.iter().for_each(|drawing| {
+    drawings.into_iter().for_each(|(drawing, offset)| {
         let drawing = drawing.create_drawing().unwrap();
-
-        let offset = input::get_offset::get_offset();
 
         grid.draw(drawing, offset);
     });

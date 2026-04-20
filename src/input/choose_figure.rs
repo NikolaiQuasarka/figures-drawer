@@ -2,7 +2,7 @@ mod rectangle;
 
 use std::io;
 
-use crate::{figures::Drawable, input};
+use crate::{drawing::basic, figures::Drawable, input};
 
 fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
     let drawing: Box<dyn Drawable> = Box::new(match str {
@@ -51,13 +51,15 @@ fn get_drawing() -> Box<dyn Drawable> {
     drawing
 }
 
-pub fn get_drawings() -> Vec<Box<dyn Drawable>> {
+pub fn get_drawings() -> Vec<(Box<dyn Drawable>, basic::Point)> {
     let mut drawings = vec![];
 
     //Нужно получить минимум 1 рисунок
-    let first_draw = get_drawing();
+    let first_drawing = get_drawing();
 
-    drawings.push(first_draw);
+    let first_drawing_offset = input::get_offset::get_offset();
+
+    drawings.push((first_drawing, first_drawing_offset));
 
     loop {
         let answer: String = input::input(
@@ -70,7 +72,9 @@ pub fn get_drawings() -> Vec<Box<dyn Drawable>> {
             "Д" => {
                 let new_drawing = get_drawing();
 
-                drawings.push(new_drawing);
+                let new_drawing_offset = input::get_offset::get_offset();
+
+                drawings.push((new_drawing, new_drawing_offset));
             }
             "Н" => break,
             _ => unreachable!(),
