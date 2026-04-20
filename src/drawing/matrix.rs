@@ -55,6 +55,10 @@ impl Matrix {
         self.cell(real_position).is_some().then_some(real_position)
     }
 
+    pub fn absolute_to_relative(&self, (x, y): (u32, u32)) -> Point {
+        unimplemented!()
+    }
+
     pub fn cell<'a>(&'a self, (x, y): (u32, u32)) -> Option<&'a Cell> {
         let Some(row) = self.data.get(y as usize) else {
             return None;

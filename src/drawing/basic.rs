@@ -1,4 +1,4 @@
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone, Copy)]
 pub struct Size(pub u32, pub u32);
 
 #[derive(Debug, Clone)]
