@@ -11,8 +11,6 @@ fn main() {
 fn app() {
     let mut grid = input::get_grid::get_grid();
 
-    // let grid = Grid::from(rectangle::drawing::basic::Size(grid.0 + 1, grid.1 + 1));
-
     println!("Сетка создана!");
 
     let drawings = input::choose_figure::get_drawings();

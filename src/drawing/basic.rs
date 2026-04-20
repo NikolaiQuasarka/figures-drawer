@@ -32,15 +32,8 @@ impl std::str::FromStr for Point {
     type Err = Box<dyn std::error::Error>;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        // let [x, y, ..] = s.trim().split_whitespace().collect::<Vec<_>>()[..] else {
-        //     return Err(Box::new(std::io::Error::new(
-        //         std::io::ErrorKind::InvalidInput,
-        //         "Parsing Error",
-        //     )));
-        // };
-        let splits = s.trim();
-
-        if splits.is_empty() {
+        let parts = s.trim();
+        if parts.is_empty() {
             return Ok(Self::default());
         }
 
