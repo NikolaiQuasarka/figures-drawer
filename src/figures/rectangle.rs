@@ -1,3 +1,5 @@
+use std::cell;
+
 use crate::{
     drawing::{basic::Size, matrix::Matrix},
     figures::Drawable,
@@ -23,14 +25,20 @@ impl Drawable for Rectangle {
         let mut matrix = Matrix::from(Size(self.width, self.height))?;
         for y in 0..self.height {
             for x in 0..self.width {
-                let mut cell_char = ' ';
+                let mut cell_char = None;
                 if y == 0 || y == self.height - 1 || x == 0 || x == self.width - 1 {
-                    cell_char = '*';
+                    cell_char = Some('*');
                 }
-                let Some(cell) = matrix.cell_mut((x, y)) else {
-                    return Err(());
+
+                let Some(cell_char) = cell_char else {
+                    continue;
                 };
-                *cell = Some(cell_char);
+
+                let Some(matrix_cell) = matrix.cell_mut((x, y)) else {
+                    continue;
+                };
+
+                *matrix_cell = Some(cell_char);
             }
         }
 

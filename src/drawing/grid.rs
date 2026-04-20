@@ -28,8 +28,8 @@ impl Grid {
         let natural_y_offset = (rows / 2) as i64;
 
         for (y, row) in drawing.get_rows().into_iter().enumerate() {
-            for (x, draw_cell) in row.into_iter().enumerate() {
-                let Some(grid_cell) = self.field.cell_mut((
+            for (x, drawing_cell) in row.into_iter().enumerate() {
+                if let Some(grid_cell) = self.field.cell_mut((
                     //В качестве отправной точки используем центр матрицы
                     (x_center as i64)
                         //К центру добавляем офсет. Если +5, то рисуем првее, если -5, то левее
@@ -45,10 +45,12 @@ impl Grid {
                         .saturating_sub(offset.1 as i64)
                         .saturating_sub(y as i64)
                         .saturating_add(natural_y_offset) as u32,
-                )) else {
-                    continue;
+                )) {
+                    if let Some(cell) = drawing_cell {
+                        let _ = grid_cell.insert(cell.clone());
+                    }
                 };
-                *grid_cell = *draw_cell;
+                continue;
             }
         }
     }
