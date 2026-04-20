@@ -53,6 +53,10 @@ impl Grid {
             }
         }
     }
+
+    pub fn get_size(&self) -> Size {
+        self.field.get_size()
+    }
 }
 
 impl ToString for Grid {

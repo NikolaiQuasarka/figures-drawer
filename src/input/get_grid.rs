@@ -6,6 +6,8 @@ use crate::{
 pub fn get_grid() -> grid::Grid {
     loop {
         let grid_size = get_grid_size();
+        // Добавляем 1 для рамки
+        let grid_size = basic::Size(grid_size.0 + 1, grid_size.1 + 1);
 
         let Ok(grid) = grid::Grid::from(grid_size) else {
             eprint!("Try again");
