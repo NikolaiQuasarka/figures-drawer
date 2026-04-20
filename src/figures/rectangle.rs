@@ -19,7 +19,7 @@ impl Rectangle {
 }
 
 impl Drawable for Rectangle {
-    fn create_drawing(&self) -> Result<Matrix<char>, ()> {
+    fn create_drawing(&self) -> Result<Matrix, ()> {
         let mut matrix = Matrix::from(Size(self.width, self.height))?;
         for y in 0..self.height {
             for x in 0..self.width {
@@ -30,7 +30,7 @@ impl Drawable for Rectangle {
                 let Some(cell) = matrix.cell_mut((x, y)) else {
                     return Err(());
                 };
-                *cell = cell_char;
+                *cell = Some(cell_char);
             }
         }
 
@@ -77,11 +77,15 @@ mod test {
     mod create_drawing {
         use super::*;
 
-        fn matrix_to_string(matrix: Matrix<char>) -> String {
+        fn matrix_to_string(matrix: Matrix) -> String {
             matrix
                 .get_rows()
                 .iter()
-                .map(|row| row.iter().collect::<String>())
+                .map(|row| {
+                    row.iter()
+                        .map(|cell| cell.unwrap_or(' '))
+                        .collect::<String>()
+                })
                 .collect()
         }
 

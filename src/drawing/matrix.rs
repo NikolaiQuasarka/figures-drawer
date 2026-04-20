@@ -1,11 +1,13 @@
 use crate::drawing::basic::{Point, Size};
 
+type Cell = Option<char>;
+
 #[derive(Debug, PartialEq)]
-pub struct Matrix<T> {
-    data: Box<[Box<[T]>]>,
+pub struct Matrix {
+    data: Box<[Box<[Cell]>]>,
 }
 
-impl Matrix<char> {
+impl Matrix {
     pub fn get_center(&self) -> (u32, u32) {
         let size = self.get_size();
         let center_width = size.0 / 2;
@@ -23,7 +25,7 @@ impl Matrix<char> {
         }
         Ok(Self {
             data: (0..size.1)
-                .map(|_| vec![' '; size.0 as usize].into_boxed_slice())
+                .map(|_| vec![None; size.0 as usize].into_boxed_slice())
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),
         })
@@ -53,7 +55,7 @@ impl Matrix<char> {
         self.cell(real_position).is_some().then_some(real_position)
     }
 
-    pub fn cell<'a>(&'a self, (x, y): (u32, u32)) -> Option<&'a char> {
+    pub fn cell<'a>(&'a self, (x, y): (u32, u32)) -> Option<&'a Cell> {
         let Some(row) = self.data.get(y as usize) else {
             return None;
         };
@@ -64,7 +66,7 @@ impl Matrix<char> {
 
         Some(cell)
     }
-    pub fn cell_mut<'a>(&'a mut self, (x, y): (u32, u32)) -> Option<&'a mut char> {
+    pub fn cell_mut<'a>(&'a mut self, (x, y): (u32, u32)) -> Option<&'a mut Cell> {
         let Some(row) = self.data.get_mut(y as usize) else {
             return None;
         };
@@ -76,7 +78,7 @@ impl Matrix<char> {
         Some(cell)
     }
 
-    pub fn get_rows(&self) -> &Box<[Box<[char]>]> {
+    pub fn get_rows(&self) -> &Box<[Box<[Cell]>]> {
         &self.data
     }
 }
@@ -181,7 +183,7 @@ mod tests {
         fn get_existing_cell() {
             let mut matrix = Matrix::from(Size(10, 10)).unwrap();
 
-            assert_eq!(&' ', matrix.cell_mut((9, 9)).unwrap())
+            assert_eq!(' ', matrix.cell_mut((9, 9)).unwrap().unwrap())
         }
 
         #[test]
@@ -196,9 +198,9 @@ mod tests {
             let mut matrix = Matrix::from(Size(10, 10)).unwrap();
 
             let cell = matrix.cell_mut((5, 5)).unwrap();
-            *cell = 'h';
+            *cell = Some('h');
 
-            assert_eq!(&'h', matrix.cell_mut((5, 5)).unwrap())
+            assert_eq!(Some(&Some('h')), matrix.cell((5, 5)))
         }
     }
 }

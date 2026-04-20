@@ -5,5 +5,5 @@ pub mod triangle;
 use crate::drawing::matrix::Matrix;
 
 pub trait Drawable {
-    fn create_drawing(&self) -> Result<Matrix<char>, ()>;
+    fn create_drawing(&self) -> Result<Matrix, ()>;
 }

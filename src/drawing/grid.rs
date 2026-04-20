@@ -5,8 +5,7 @@ use crate::drawing::{
 
 #[derive(Debug)]
 pub struct Grid {
-    field: Matrix<char>,
-    // center: Point,
+    field: Matrix,
 }
 
 impl Grid {
@@ -18,7 +17,7 @@ impl Grid {
         Ok(Grid { field: matrix })
     }
 
-    pub fn draw(&mut self, drawing: Matrix<char>, offset: Point) {
+    pub fn draw(&mut self, drawing: Matrix, offset: Point) {
         let (x_center, y_center) = self.field.get_center();
 
         let Size(columns, rows) = drawing.get_size();
@@ -65,11 +64,12 @@ impl ToString for Grid {
             .get_rows()
             .iter()
             .map(|row| {
-                let row = row.iter().collect::<String>();
-                format!("\n{row}")
+                row.iter()
+                    .map(|cell| cell.unwrap_or(' '))
+                    .collect::<String>()
             })
             .collect::<Vec<_>>()
-            .join("")
+            .join("\n")
     }
 }
 
