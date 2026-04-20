@@ -135,7 +135,7 @@ mod tests {
 
         #[test]
         fn rectangle() {
-            let rectangle = Rectangle::from(4, 4).unwrap();
+            let rectangle = Rectangle::from(Size(4, 4)).unwrap();
 
             let mut grid = Grid::from(Size(4, 4)).unwrap();
 

@@ -1,5 +1,5 @@
 pub fn get_offset() -> crate::drawing::basic::Point {
     use crate::input;
 
-    input::input("Введите смещение в формате: x,y)", "", |_| true)
+    input::input("Введите смещение в формате: x y", "", |_| true)
 }

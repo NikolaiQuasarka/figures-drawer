@@ -17,19 +17,11 @@ pub fn get_grid() -> grid::Grid {
 }
 
 fn get_grid_size() -> basic::Size {
-    println!("Enter grid size:");
-
-    let width: u32 = input::input(
-        "Введите ширину:",
-        "Значение должно быть выше 0. Только целые числа",
-        |&width| width > 0,
+    let size = input::input::<basic::Size, _>(
+        "Введите размер сетки в формате: ширина высота",
+        "Размер должен быть минимум 1x1, только целые числа",
+        // |(width, height)| width > 0 && height > 0,
+        |size| size.0 > 0 && size.1 > 0,
     );
-
-    let height: u32 = input::input(
-        "Введите высоту:",
-        "Значение должно быть выше 0. Только целые числа",
-        |&height| height > 0,
-    );
-
-    basic::Size(width, height)
+    size
 }

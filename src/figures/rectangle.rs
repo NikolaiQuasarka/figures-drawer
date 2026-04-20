@@ -9,7 +9,7 @@ pub struct Rectangle {
 }
 
 impl Rectangle {
-    pub fn from(width: u32, height: u32) -> Result<Self, ()> {
+    pub fn from(Size(width, height): Size) -> Result<Self, ()> {
         if width < 1 || height < 1 {
             return Err(());
         }
@@ -47,28 +47,28 @@ mod test {
 
         #[test]
         fn zero_size() {
-            let rectangle = Rectangle::from(0, 0);
+            let rectangle = Rectangle::from(Size(0, 0));
 
             assert!(rectangle.is_err())
         }
 
         #[test]
         fn width_wrong() {
-            let rectangle = Rectangle::from(0, 4);
+            let rectangle = Rectangle::from(Size(0, 4));
 
             assert!(rectangle.is_err())
         }
 
         #[test]
         fn height_wrong() {
-            let rectangle = Rectangle::from(7, 0);
+            let rectangle = Rectangle::from(Size(7, 0));
 
             assert!(rectangle.is_err())
         }
 
         #[test]
         fn correct_size() {
-            let rectangle = Rectangle::from(7, 8);
+            let rectangle = Rectangle::from(Size(7, 8));
 
             assert!(rectangle.is_ok())
         }
@@ -87,7 +87,10 @@ mod test {
 
         #[test]
         fn five_x_five() {
-            let rectangle = Rectangle::from(5, 5).unwrap().create_drawing().unwrap();
+            let rectangle = Rectangle::from(Size(5, 5))
+                .unwrap()
+                .create_drawing()
+                .unwrap();
 
             let rectangle_string = "******   **   **   ******";
 
@@ -96,7 +99,10 @@ mod test {
 
         #[test]
         fn one_x_one() {
-            let rectangle = Rectangle::from(1, 1).unwrap().create_drawing().unwrap();
+            let rectangle = Rectangle::from(Size(1, 1))
+                .unwrap()
+                .create_drawing()
+                .unwrap();
 
             let rectangle_string = "*";
 
@@ -105,7 +111,10 @@ mod test {
 
         #[test]
         fn ten_x_ten() {
-            let rectangle = Rectangle::from(10, 10).unwrap().create_drawing().unwrap();
+            let rectangle = Rectangle::from(Size(10, 10))
+                .unwrap()
+                .create_drawing()
+                .unwrap();
 
             let rectangle_string = "***********        **        **        **        **        **        **        **        ***********";
 
