@@ -55,8 +55,18 @@ impl Matrix {
         self.cell(real_position).is_some().then_some(real_position)
     }
 
-    pub fn absolute_to_relative(&self, (x, y): (u32, u32)) -> Point {
-        unimplemented!()
+    pub fn absolute_to_relative(&self, absolute_position: (u32, u32)) -> Option<Point> {
+        //Проверяем, что такая точка сущестует
+        self.cell(absolute_position)?;
+
+        let center = self.get_center();
+
+        let relative_position = (
+            (absolute_position.0.saturating_sub(center.0)) as i32,
+            (absolute_position.1.saturating_sub(center.1)) as i32,
+        );
+
+        Some(Point(relative_position.0, relative_position.1))
     }
 
     pub fn cell<'a>(&'a self, (x, y): (u32, u32)) -> Option<&'a Cell> {

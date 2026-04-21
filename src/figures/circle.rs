@@ -42,7 +42,7 @@ impl Drawable for Circle {
 
         for row in (0..size.1).into_iter() {
             for column in (0..size.0).into_iter() {
-                let point = matrix.absolute_to_relative((column, row));
+                let point = matrix.absolute_to_relative((column, row)).ok_or(())?;
                 match self.is_point_crossing_circle(point) {
                     NumberState::Equal => {
                         let cell = matrix.cell_mut((column, row)).ok_or(())?;
@@ -53,6 +53,7 @@ impl Drawable for Circle {
                 }
             }
         }
-        unimplemented!()
+
+        Ok(matrix)
     }
 }

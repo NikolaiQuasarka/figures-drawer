@@ -1,3 +1,4 @@
+mod circle;
 mod rectangle;
 
 use std::io;
@@ -5,12 +6,12 @@ use std::io;
 use crate::{drawing::basic, figures::Drawable, input};
 
 fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
-    let drawing: Box<dyn Drawable> = Box::new(match str {
-        "Circle" => todo!(),
-        "Rectangle" => rectangle::get_rectangle(),
+    let drawing: Box<dyn Drawable> = match str {
+        "Circle" => Box::new(circle::get_circle()),
+        "Rectangle" => Box::new(rectangle::get_rectangle()),
         "Triangle" => todo!(),
         _ => return Err(()),
-    });
+    };
 
     Ok(drawing)
 }
