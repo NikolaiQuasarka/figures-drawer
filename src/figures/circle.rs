@@ -24,7 +24,7 @@ impl Circle {
 
         let mut x = 0;
         let mut y = radius as i32;
-        let mut d = 1i32.wrapping_sub(radius as i32);
+        let mut p = 1i32.wrapping_sub(radius as i32);
 
         while x <= y {
             let points = [
@@ -48,10 +48,11 @@ impl Circle {
                 let _ = cell.insert('*');
             }
 
-            if d < 0 {
-                d += 2 * x + 3;
+            x += 1;
+            if p < 0 {
+                p += 2 * x + 1;
             } else {
-                d += 2 * (x - y) + 5;
+                p += 2 * (x - y) + 1;
                 y -= 1;
             }
 

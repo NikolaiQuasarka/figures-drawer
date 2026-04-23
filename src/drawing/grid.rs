@@ -67,7 +67,11 @@ impl ToString for Grid {
             .iter()
             .map(|row| {
                 row.iter()
-                    .map(|cell| cell.unwrap_or(' '))
+                    // .map(|cell| cell.unwrap_or(' '))
+                    .map(|cell| {
+                        cell.and_then(|cell| Some(format!("{cell}{cell}")))
+                            .unwrap_or("  ".to_string())
+                    })
                     .collect::<String>()
             })
             .collect::<Vec<_>>()
