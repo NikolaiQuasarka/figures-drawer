@@ -56,14 +56,13 @@ impl Matrix {
     }
 
     pub fn absolute_to_relative(&self, absolute_position: (u32, u32)) -> Option<Point> {
-        //Проверяем, что такая точка сущестует
         self.cell(absolute_position)?;
 
         let center = self.get_center();
 
         let relative_position = (
-            (absolute_position.0.saturating_sub(center.0)) as i32,
-            (absolute_position.1.saturating_sub(center.1)) as i32,
+            absolute_position.0.wrapping_sub(center.0) as i32,
+            absolute_position.1.wrapping_sub(center.1) as i32,
         );
 
         Some(Point(relative_position.0, relative_position.1))
@@ -100,6 +99,7 @@ impl Matrix {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rstest::rstest;
 
     mod relative_to_absolute {
         use super::*;
@@ -133,6 +133,27 @@ mod tests {
             let matrix = Matrix::from(Size(100, 50)).expect("Ошибка создания");
 
             assert_eq!(None, matrix.relative_to_absolute(Point(-100, -22)))
+        }
+    }
+
+    mod absolute_to_relative {
+        use super::*;
+
+        #[rstest]
+        #[case(Size(10,10), (0,0), Some(Point(-5,-4)))]
+        #[case(Size(10,10), (9,9), Some(Point(4,5)))]
+        #[case(Size(5,5), (2,2), Some(Point(0,0)))]
+        #[case(Size(10,10) ,(12,12), None)]
+        fn absolute_to_relative(
+            #[case] matrix_size: Size,
+            #[case] absolute_position: (u32, u32),
+            #[case] expected_value: Option<Point>,
+        ) {
+            let matrix = Matrix::from(matrix_size).unwrap();
+
+            let relative_point = matrix.absolute_to_relative(absolute_position);
+
+            assert_eq!(expected_value, relative_point)
         }
     }
 

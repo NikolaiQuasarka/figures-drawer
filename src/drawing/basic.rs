@@ -1,7 +1,7 @@
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub struct Size(pub u32, pub u32);
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Point(pub i32, pub i32);
 
 impl std::str::FromStr for Size {
