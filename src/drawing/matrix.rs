@@ -38,19 +38,19 @@ impl Matrix {
     pub fn relative_to_absolute(&self, position: Point) -> Option<(u32, u32)> {
         let center = self.get_center();
 
-        let real_position = (center.0 as i32 + position.0, center.1 as i32 + position.1);
+        let absolute_position = (center.0 as i32 + position.0, center.1 as i32 + position.1);
 
         let size = self.get_size();
 
-        if real_position.0 < 0
-            || real_position.0 >= size.0 as i32
-            || real_position.1 < 0
-            || real_position.1 >= size.1 as i32
+        if absolute_position.0 < 0
+            || absolute_position.0 >= size.0 as i32
+            || absolute_position.1 < 0
+            || absolute_position.1 >= size.1 as i32
         {
             return None;
         }
 
-        let real_position = (real_position.0 as u32, real_position.1 as u32);
+        let real_position = (absolute_position.0 as u32, absolute_position.1 as u32);
 
         self.cell(real_position).is_some().then_some(real_position)
     }
@@ -101,7 +101,7 @@ impl Matrix {
 mod tests {
     use super::*;
 
-    mod relative_to_real {
+    mod relative_to_absolute {
         use super::*;
 
         #[test]
