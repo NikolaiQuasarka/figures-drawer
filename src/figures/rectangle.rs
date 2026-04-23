@@ -1,5 +1,3 @@
-use std::cell;
-
 use crate::{
     drawing::{basic::Size, matrix::Matrix},
     figures::Drawable,
