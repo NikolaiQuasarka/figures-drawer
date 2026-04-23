@@ -48,14 +48,13 @@ impl Circle {
                 let _ = cell.insert('*');
             }
 
+            x += 1;
             if d < 0 {
-                d += 2 * x + 3;
+                d += 2 * x + 1;
             } else {
-                d += 2 * (x - y) + 5;
+                d += 2 * (x - y) + 1;
                 y -= 1;
             }
-
-            x += 1;
         }
 
         matrix
