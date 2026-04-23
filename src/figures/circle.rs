@@ -15,38 +15,56 @@ impl Circle {
         Circle { radius }
     }
 
-    fn calulate_distance_from_center_to_point(&self, basic::Point(x, y): basic::Point) -> u32 {
-        let result = (x.pow(2) + y.pow(2)).isqrt() as u32;
+    fn mid_point_alghorithm(&self) -> Matrix {
+        let radius = self.radius;
 
-        result
+        let size = Size(radius * 2 + 1, radius * 2 + 1);
+
+        let mut matrix = Matrix::from(size).unwrap();
+
+        let mut x = 0;
+        let mut y = radius as i32;
+        let mut d = 1i32.wrapping_sub(radius as i32);
+
+        while x <= y {
+            let points = [
+                (x, y),
+                (y, x),
+                (-x, y),
+                (-y, x),
+                (x, -y),
+                (y, -x),
+                (-x, -y),
+                (-y, -x),
+            ];
+
+            for (x, y) in points {
+                let absolute_position = matrix.relative_to_absolute(basic::Point(x, y)).unwrap();
+
+                let cell = matrix
+                    .cell_mut(absolute_position)
+                    .expect("Точка несуществует");
+
+                let _ = cell.insert('*');
+            }
+
+            if d < 0 {
+                d += 2 * x + 3;
+            } else {
+                d += 2 * (x - y) + 5;
+                y -= 1;
+            }
+
+            x += 1;
+        }
+
+        matrix
     }
 }
 
 impl Drawable for Circle {
     fn create_drawing(&self) -> Result<crate::drawing::matrix::Matrix, ()> {
-        let size = Size(self.radius * 2 + 1, self.radius * 2 + 1);
-
-        let mut matrix = Matrix::from(size)?;
-
-        for row in (0..size.1).into_iter() {
-            for column in (0..size.0).into_iter() {
-                let point = matrix.absolute_to_relative((column, row)).ok_or(())?;
-
-                let distance = self.calulate_distance_from_center_to_point(point);
-
-                const MAX_DIFFERENCE: i32 = 0;
-
-                let difference = ((self.radius.wrapping_sub(distance)) as i32).abs();
-
-                if difference > MAX_DIFFERENCE {
-                    continue;
-                }
-
-                let cell = matrix.cell_mut((column, row)).ok_or(())?;
-                let _ = cell.insert('#');
-            }
-        }
-
+        let matrix = self.mid_point_alghorithm();
         Ok(matrix)
     }
 }
