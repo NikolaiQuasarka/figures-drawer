@@ -1,5 +1,6 @@
 mod circle;
 mod rectangle;
+mod triangle;
 
 use std::io;
 
@@ -7,9 +8,9 @@ use crate::{drawing::basic, figures::Drawable, input};
 
 fn from(str: &str) -> Result<Box<dyn Drawable>, ()> {
     let drawing: Box<dyn Drawable> = match str {
-        "Circle" => Box::new(circle::get_circle()),
-        "Rectangle" => Box::new(rectangle::get_rectangle()),
-        "Triangle" => todo!(),
+        "1" | "Circle" => Box::new(circle::get_circle()),
+        "2" | "Rectangle" => Box::new(rectangle::get_rectangle()),
+        "3" | "Triangle" => Box::new(triangle::get_gtiangle()),
         _ => return Err(()),
     };
 
@@ -23,7 +24,10 @@ fn get_drawing() -> Box<dyn Drawable> {
         "Введите название рисунка:{}",
         LIST.iter()
             .enumerate()
-            .map(|(i, draw)| { format!("\n{i}. {draw}") })
+            .map(|(i, draw)| {
+                let i = i + 1;
+                format!("\n{i}. {draw}")
+            })
             .collect::<String>()
     );
 
